@@ -1,6 +1,6 @@
 import {
   type Action, actorOf, apply, botStep, type Card, canastaCount, type GameState, initialMeldMinimum, isPileFrozenFor,
-  newGame, type RuleSet, sortCards, teamOf,
+  newGame, type RuleSet, sortCards, sumPoints, teamOf,
 } from '@cca/engine';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { Skin } from './App';
@@ -83,7 +83,6 @@ export function Table({ rules, seed, lang, skin, onLang, onSkin, onExit, onResta
   );
   const hand = sortCards(game.hands[HUMAN].filter((c) => !stagedIds.has(c.id)));
   const byId = new Map(game.hands[HUMAN].map((c) => [c.id, c]));
-  const hasStaging = staging.newMelds.length > 0 || staging.additions.length > 0;
 
   const toggle = (id: number) => setSelected((s) => {
     const n = new Set(s);
@@ -91,58 +90,63 @@ export function Table({ rules, seed, lang, skin, onLang, onSkin, onExit, onResta
     return n;
   });
 
-  const onStock = () => { if (myTurn && game.phase === 'draw') act({ t: 'draw' }, clearAll); };
-  const onPile = () => {
-    if (!myTurn || game.phase !== 'draw') return;
-    act({ t: 'takePile', pair: [...selected], extraMelds: staging.newMelds }, clearAll);
+  const canDraw = myTurn && game.phase === 'draw';
+  const canPlay = myTurn && game.phase === 'play';
+  const teamMelded = game.melds[myTeam].length > 0;
+  const canAsk = myTurn && four && !game.meldedThisTurn && game.goOut === null
+    && canastaCount(game.melds[myTeam]) >= rules.canastasToGoOut - 1;
+
+  /**
+   * Lay the staged cards down as soon as that is legal. A first meld that is still short of the
+   * minimum stays staged, so the player can add more melds until it counts enough.
+   */
+  const stage = (next: Staging) => {
+    if (game.phase === 'draw') { setStaging(next); setSelected(new Set()); return; } // extras for taking the pile
+    const r = apply(game, HUMAN, { t: 'play', ...next });
+    if (r.ok) { setGame(r.state); clearAll(); return; }
+    if (r.code === 'minimum_not_met') { setStaging(next); setSelected(new Set()); }
+    showError(r);
   };
-  const onNewMeld = () => {
-    if (selected.size === 0) { showError({ code: 'nothing_to_play' }); return; }
-    setStaging((s) => ({ ...s, newMelds: [...s.newMelds, [...selected]] }));
-    setSelected(new Set());
+
+  const onStock = () => {
+    if (!canDraw) return;
+    act(game.stock.length > 0 ? { t: 'draw' } : { t: 'endHand' }, clearAll);
+  };
+  // The pile: take it while drawing; discard onto it while playing.
+  const onPile = () => {
+    if (canDraw) { act({ t: 'takePile', pair: [...selected], extraMelds: staging.newMelds }, clearAll); return; }
+    if (!canPlay) return;
+    if (selected.size !== 1) { showError({ code: 'select_one' }); return; }
+    discard([...selected][0]);
+  };
+  const discard = (card: number) => act({ t: 'discard', card }, clearAll);
+  const onZoneTap = (e: React.MouseEvent) => {
+    if ((e.target as HTMLElement).closest('.meld')) return;
+    if (!myTurn || selected.size === 0 || (game.phase === 'draw' && teamMelded)) return;
+    stage({ ...staging, newMelds: [...staging.newMelds, [...selected]] });
   };
   const onMeldTap = (meldId: string) => {
-    if (selected.size === 0) return;
-    setStaging((s) => ({ ...s, additions: [...s.additions, { meldId, cards: [...selected] }] }));
-    setSelected(new Set());
+    if (!canPlay || selected.size === 0) return;
+    stage({ ...staging, additions: [...staging.additions, { meldId, cards: [...selected] }] });
   };
+  // A staged meld: tap with cards selected to add them; tap with nothing selected to take it back.
   const onStagedTap = (i: number) => {
-    if (selected.size === 0) return;
-    setStaging((s) => ({ ...s, newMelds: s.newMelds.map((m, j) => (j === i ? [...m, ...selected] : m)) }));
-    setSelected(new Set());
+    if (selected.size === 0) { setStaging((st) => ({ ...st, newMelds: st.newMelds.filter((_, j) => j !== i) })); return; }
+    stage({ ...staging, newMelds: staging.newMelds.map((m, j) => (j === i ? [...m, ...selected] : m)) });
   };
-  const onLayDown = () => {
-    if (!hasStaging) { showError({ code: 'nothing_to_play' }); return; }
-    act({ t: 'play', ...staging }, clearAll);
-  };
-  const onDiscard = () => {
-    if (selected.size !== 1) { showError({ code: 'select_one' }); return; }
-    const card = [...selected][0];
-    let s = game;
-    if (hasStaging) {
-      const r = apply(s, HUMAN, { t: 'play', ...staging });
-      if (!r.ok) { showError(r); return; }
-      s = r.state;
-    }
-    if (s.phase === 'play') {
-      const r = apply(s, HUMAN, { t: 'discard', card });
-      if (!r.ok) { showError(r); if (s !== game) { setGame(s); setStaging(EMPTY); } return; }
-      s = r.state;
-    }
-    setGame(s);
-    clearAll();
-  };
+  const onCardDouble = (id: number) => { if (canPlay) discard(id); };
 
   // Status line
   let status: string;
   if (game.goOut?.status === 'pending' && actor !== HUMAN) status = tw(lang, 'sAnswer', who(actor!));
   else if (game.turn !== HUMAN) status = tw(lang, 'sWait', who(game.turn));
   else if (game.phase === 'draw') status = t(lang, game.stock.length === 0 ? 'sStockOut' : selected.size ? 'sDrawSel' : 'sDraw');
-  else status = t(lang, 'sPlay');
+  else status = t(lang, selected.size === 1 ? 'sPlayOne' : selected.size > 1 ? 'sPlayMany' : 'sPlay');
 
   const ourMelds = game.melds[myTeam];
   const theirMelds = game.melds[(1 - myTeam) as 0 | 1];
   const need = initialMeldMinimum(game.scores[myTeam]);
+  const stagedPoints = sumPoints(staging.newMelds.flat().map((id) => byId.get(id)!).filter(Boolean));
   const top = game.pile[game.pile.length - 1];
   const frozenForMe = isPileFrozenFor(game, myTeam);
   const recent = game.log.map((e) => eventText(lang, e, who)).filter(Boolean).slice(-3) as string[];
@@ -151,14 +155,21 @@ export function Table({ rules, seed, lang, skin, onLang, onSkin, onExit, onResta
   const seatChip = (seat: number, pos: string) => {
     const w = who(seat);
     const turn = game.turn === seat && game.phase !== 'handOver' && game.phase !== 'gameOver';
+    const askable = canAsk && seat === (HUMAN + 2) % 4;
+    const Tag = askable ? 'button' : 'div';
     return (
-      <div className={`seat seat-${pos} ${turn ? 'on-turn' : ''} ${teamOf(seat) === myTeam ? 'ally' : 'foe'}`}>
+      <Tag
+        type={askable ? 'button' : undefined}
+        className={`seat seat-${pos} ${turn ? 'on-turn' : ''} ${teamOf(seat) === myTeam ? 'ally' : 'foe'} ${askable ? 'askable' : ''}`}
+        onClick={askable ? () => act({ t: 'ask' }) : undefined}
+      >
         <span className="avatar" aria-hidden="true">{w.name[0]}</span>
         <span className="seat-meta">
           <span className="seat-name">{w.name}</span>
           <span className="seat-cards">{t(lang, 'cards', { n: game.hands[seat].length })}</span>
         </span>
-      </div>
+        {askable && <span className="ask-bubble">{t(lang, 'askTap')}</span>}
+      </Tag>
     );
   };
 
@@ -195,11 +206,14 @@ export function Table({ rules, seed, lang, skin, onLang, onSkin, onExit, onResta
         </section>
 
         <section className="center">
-          <button type="button" className={`pilebox ${myTurn && game.phase === 'draw' && game.stock.length ? 'can' : ''}`} onClick={onStock} aria-label={t(lang, 'draw')}>
+          <button type="button" className={`pilebox ${canDraw ? 'can' : ''}`} onClick={onStock} aria-label={t(lang, game.stock.length ? 'draw' : 'endHand')}>
             {game.stock.length > 0 ? <CardBack count={game.stock.length} /> : <span className="card card-pile empty" />}
             <span className="pile-label">{t(lang, 'stock')}</span>
           </button>
-          <button type="button" className={`pilebox ${myTurn && game.phase === 'draw' && top ? 'can' : ''}`} onClick={onPile} aria-label={t(lang, 'takePile')}>
+          <button
+            type="button" className={`pilebox ${(canDraw && top) || (canPlay && selected.size === 1) ? 'can' : ''} ${canPlay && selected.size === 1 ? 'discard-target' : ''}`}
+            onClick={onPile} aria-label={t(lang, canPlay ? 'discard' : 'takePile')}
+          >
             <span className="pile-stack">
               {game.pileFrozenAll && game.pile.length > 1 && <span className="card card-pile back crossed" aria-hidden="true" />}
               {top ? <CardFace card={top} size="pile" /> : <span className="card card-pile empty" />}
@@ -209,14 +223,18 @@ export function Table({ rules, seed, lang, skin, onLang, onSkin, onExit, onResta
           </button>
           <div className="info">
             <div className="stat"><span>{t(lang, 'canastas')}</span><b>{canastaCount(ourMelds)} / {rules.canastasToGoOut}</b></div>
-            <div className="stat"><span>{ourMelds.length ? t(lang, 'melded') : t(lang, 'firstMeld', { n: need })}</span></div>
+            <div className="stat"><span>{ourMelds.length ? t(lang, 'melded') : stagedPoints ? t(lang, 'firstMeldProgress', { have: stagedPoints, n: need }) : t(lang, 'firstMeld', { n: need })}</span></div>
           </div>
           <ol className="log" aria-live="polite">{recent.map((line, i) => <li key={`${game.log.length}-${i}`}>{line}</li>)}</ol>
           {flash && <div className="flash" role="status">{t(lang, 'flash')}</div>}
         </section>
 
-        <section className="zone ours" aria-label={t(lang, 'ourMelds')}>
+        <section
+          className={`zone ours ${myTurn && selected.size > 0 && (canPlay || !teamMelded) ? 'target' : ''}`}
+          aria-label={t(lang, 'ourMelds')} onClick={onZoneTap}
+        >
           <span className="zone-label">{t(lang, 'ourMelds')}<Red3s n={game.red3s[myTeam].length} /></span>
+          {myTurn && selected.size > 0 && (canPlay || !teamMelded) && <span className="zone-drop">{t(lang, 'tapToMeld')}</span>}
           <div className="melds">
             {ourMelds.map((m) => (
               <MeldStack
@@ -242,23 +260,10 @@ export function Table({ rules, seed, lang, skin, onLang, onSkin, onExit, onResta
             {hand.map((c: Card) => (
               <CardFace
                 key={c.id} card={c} selected={selected.has(c.id)} fresh={game.drawn.includes(c.id)}
-                onClick={() => toggle(c.id)} label={cardLabel(c)}
+                onClick={() => toggle(c.id)} onDoubleClick={() => onCardDouble(c.id)} label={cardLabel(c)}
               />
             ))}
           </div>
-          <div className="actions">
-            {game.phase === 'draw' && myTurn && game.stock.length > 0 && <button type="button" className="btn primary" onClick={onStock}>{t(lang, 'draw')}</button>}
-            {game.phase === 'draw' && myTurn && <button type="button" className="btn" onClick={onPile}>{t(lang, 'takePile')}</button>}
-            {game.phase === 'draw' && myTurn && game.stock.length === 0 && <button type="button" className="btn" onClick={() => act({ t: 'endHand' })}>{t(lang, 'endHand')}</button>}
-            {myTurn && <button type="button" className="btn" onClick={onNewMeld}>{t(lang, 'newMeld')}</button>}
-            {myTurn && game.phase === 'play' && <button type="button" className="btn" onClick={onLayDown} disabled={!hasStaging}>{t(lang, 'layDown')}</button>}
-            {myTurn && game.phase === 'play' && <button type="button" className="btn primary" onClick={onDiscard}>{t(lang, 'discard')}</button>}
-            {myTurn && four && !game.meldedThisTurn && game.goOut === null && canastaCount(ourMelds) >= rules.canastasToGoOut - 1 && (
-              <button type="button" className="btn ask" onClick={() => act({ t: 'ask' })}>{t(lang, 'ask')}</button>
-            )}
-            {(hasStaging || selected.size > 0) && <button type="button" className="btn ghost" onClick={clearAll}>{t(lang, 'undo')}</button>}
-          </div>
-          {myTurn && game.phase === 'play' && ourMelds.length > 0 && <p className="hint">{t(lang, 'addHint')}</p>}
         </section>
 
         {toast && <div className="toast" role="alert">{toast}</div>}

@@ -228,3 +228,14 @@ button.meld:hover { box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 60%, 
   .card, .mode { transition: none; }
   .card.fresh, .flash { animation: none; }
 }
+
+/* ---------------------------------------------------------------- tap targets (no action buttons) */
+.zone.ours.target { cursor: pointer; border-style: dashed; border-color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, var(--zone)); }
+.zone-drop { position: absolute; inset-inline-end: 12px; top: 4px; font-size: 11px; font-weight: 700; color: var(--accent); letter-spacing: 0.04em; animation: pulse 1.4s ease-in-out infinite; }
+.pilebox.discard-target .card { box-shadow: 0 0 0 3px var(--accent), 0 0 22px color-mix(in srgb, var(--accent) 60%, transparent); }
+.seat.askable { position: relative; cursor: pointer; border-color: var(--accent); }
+.ask-bubble { position: absolute; top: calc(100% + 6px); left: 50%; transform: translateX(-50%); white-space: nowrap; background: var(--accent); color: var(--btn-ink); font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 10px; z-index: 3; animation: pulse 1.4s ease-in-out infinite; }
+.ask-bubble::before { content: ""; position: absolute; top: -5px; left: 50%; transform: translateX(-50%); border: 5px solid transparent; border-top: 0; border-bottom-color: var(--accent); }
+.staged-wrap { cursor: pointer; }
+@keyframes pulse { 50% { opacity: 0.6; } }
+@media (prefers-reduced-motion: reduce) { .zone-drop, .ask-bubble { animation: none; } }

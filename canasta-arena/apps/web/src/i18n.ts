@@ -22,9 +22,9 @@ const en: Dict = {
   ourMelds: 'Our melds', theirMelds: 'Their melds',
   canastas: 'Canastas', firstMeld: 'First meld: {n}', melded: 'Melded',
   red3s: 'Red 3s',
-  sDraw: 'Your turn: draw from the stock, or take the pile.',
+  sDraw: 'Your turn: tap the stock to draw, or tap the pile to take it.',
   sDrawSel: 'To take the pile, select the matching cards from your hand, then tap the pile.',
-  sPlay: 'Meld if you can, then discard one card.',
+  sPlay: 'Select cards. Tap your meld area to meld, or one of your melds to add to it.',
   sWait: '{name} is playing…', sAnswer: 'Waiting for {name} to answer…',
   sStockOut: 'The stock is empty. Take the pile, or end the hand.',
   draw: 'Draw', takePile: 'Take pile', newMeld: 'New meld', layDown: 'Lay down', undo: 'Undo',
@@ -59,6 +59,11 @@ const en: Dict = {
   err_ask_before_melding: 'Ask before you meld anything this turn.', err_cannot_ask: 'You can’t ask right now.',
   err_must_take_pile: 'The top card fits your meld, so you must take the pile.', err_nothing_to_play: 'Select cards first.',
   err_select_one: 'Select exactly one card to discard.',
+  sPlayOne: 'Tap the pile to discard this card, or tap a meld to add it.',
+  sPlayMany: 'Tap your meld area to meld these cards, or tap one of your melds to add them.',
+  askTap: 'Tap to ask: “May I go out?”',
+  tapToMeld: 'Tap here to meld',
+  firstMeldProgress: 'First meld: {have} / {n}',
 };
 
 const es: Dict = {
@@ -76,9 +81,9 @@ const es: Dict = {
   ourMelds: 'Nuestros juegos', theirMelds: 'Sus juegos',
   canastas: 'Canastas', firstMeld: 'Primera bajada: {n}', melded: 'Ya bajamos',
   red3s: 'Treses rojos',
-  sDraw: 'Tu turno: roba del mazo o toma el pozo.',
+  sDraw: 'Tu turno: toca el mazo para robar o el pozo para tomarlo.',
   sDrawSel: 'Para tomar el pozo, selecciona las cartas que combinan y toca el pozo.',
-  sPlay: 'Baja si puedes y luego descarta una carta.',
+  sPlay: 'Selecciona cartas. Toca tu zona de juegos para bajar, o uno de tus juegos para añadir.',
   sWait: '{name} está jugando…', sAnswer: 'Esperando la respuesta de {name}…',
   sStockOut: 'El mazo se acabó. Toma el pozo o termina la mano.',
   draw: 'Robar', takePile: 'Tomar pozo', newMeld: 'Nuevo juego', layDown: 'Bajar', undo: 'Deshacer',
@@ -116,6 +121,11 @@ const es: Dict = {
   e_draw1_you: 'Robaste una carta', e_draw_you: 'Robaste {n} cartas', e_takePile_you: 'Tomaste el pozo ({n} cartas)',
   e_discard_you: 'Descartaste {card}', e_meld_you: 'Bajaste cartas', e_canasta_you: '¡Completaste una canasta!',
   e_red3_you: 'Bajaste un tres rojo', e_goOut_you: '¡Cerraste!', wentOut_you: 'Cerraste',
+  sPlayOne: 'Toca el pozo para descartar esta carta, o un juego para añadirla.',
+  sPlayMany: 'Toca tu zona de juegos para bajar estas cartas, o uno de tus juegos para añadirlas.',
+  askTap: 'Toca para preguntar: «¿Puedo cerrar?»',
+  tapToMeld: 'Toca aquí para bajar',
+  firstMeldProgress: 'Primera bajada: {have} / {n}',
 };
 
 const de: Dict = {
@@ -133,9 +143,9 @@ const de: Dict = {
   ourMelds: 'Unsere Meldungen', theirMelds: 'Ihre Meldungen',
   canastas: 'Canastas', firstMeld: 'Erstes Auslegen: {n}', melded: 'Ausgelegt',
   red3s: 'Rote Dreien',
-  sDraw: 'Du bist dran: Ziehe vom Talon oder nimm die Ablage.',
+  sDraw: 'Du bist dran: Tippe auf den Talon zum Ziehen oder auf die Ablage, um sie zu nehmen.',
   sDrawSel: 'Um die Ablage zu nehmen, wähle die passenden Karten und tippe auf die Ablage.',
-  sPlay: 'Lege aus, wenn du kannst, und wirf dann eine Karte ab.',
+  sPlay: 'Wähle Karten. Tippe auf deinen Meldebereich zum Auslegen oder auf eine Meldung zum Anlegen.',
   sWait: '{name} ist am Zug…', sAnswer: 'Warte auf die Antwort von {name}…',
   sStockOut: 'Der Talon ist leer. Nimm die Ablage oder beende das Spiel.',
   draw: 'Ziehen', takePile: 'Ablage nehmen', newMeld: 'Neue Meldung', layDown: 'Auslegen', undo: 'Zurück',
@@ -174,6 +184,11 @@ const de: Dict = {
   e_takePile_you: 'Du hast die Ablage genommen ({n} Karten)', e_discard_you: 'Du hast {card} abgeworfen',
   e_meld_you: 'Du hast ausgelegt', e_canasta_you: 'Du hast eine Canasta!', e_red3_you: 'Du hast eine rote Drei ausgelegt',
   e_goOut_you: 'Du hast ausgemacht!', wentOut_you: 'Du hast ausgemacht',
+  sPlayOne: 'Tippe auf die Ablage, um diese Karte abzuwerfen, oder auf eine Meldung zum Anlegen.',
+  sPlayMany: 'Tippe auf deinen Meldebereich, um diese Karten auszulegen, oder auf eine Meldung zum Anlegen.',
+  askTap: 'Tippen zum Fragen: „Darf ich ausmachen?“',
+  tapToMeld: 'Hier tippen zum Auslegen',
+  firstMeldProgress: 'Erstes Auslegen: {have} / {n}',
 };
 
 const ar: Dict = {
@@ -191,9 +206,9 @@ const ar: Dict = {
   ourMelds: 'مجموعاتنا', theirMelds: 'مجموعاتهم',
   canastas: 'كاناستا', firstMeld: 'النزول الأول: {n}', melded: 'نزلنا',
   red3s: 'الثلاثات الحمراء',
-  sDraw: 'دورك: اسحب من الرزمة أو خذ الأرض.',
+  sDraw: 'دورك: اضغط على الرزمة لتسحب، أو على الأرض لتأخذها.',
   sDrawSel: 'لتأخذ الأرض، اختر الأوراق المطابقة من يدك ثم اضغط على الأرض.',
-  sPlay: 'نزّل إن استطعت، ثم ارمِ ورقة واحدة.',
+  sPlay: 'اختر أوراقاً. اضغط على منطقة مجموعاتك لتنزّل، أو على إحدى مجموعاتك لتضيف إليها.',
   sWait: '{name} يلعب…', sAnswer: 'بانتظار جواب {name}…',
   sStockOut: 'انتهت الرزمة. خذ الأرض أو أنهِ الجولة.',
   draw: 'اسحب', takePile: 'خذ الأرض', newMeld: 'مجموعة جديدة', layDown: 'نزّل', undo: 'تراجع',
@@ -235,6 +250,11 @@ const ar: Dict = {
   e_draw1_f: '{name} سحبت ورقة', e_draw_f: '{name} سحبت ورقتين', e_takePile_f: '{name} أخذت الأرض (أوراق: {n})',
   e_discard_f: '{name} رمت {card}', e_meld_f: '{name} نزّلت', e_canasta_f: '{name} أكملت كاناستا!',
   e_red3_f: '{name} نزّلت ثلاثة حمراء', e_goOut_f: '{name} خرجت!',
+  sPlayOne: 'اضغط على الأرض لترمي هذه الورقة، أو على مجموعة لتضيفها إليها.',
+  sPlayMany: 'اضغط على منطقة مجموعاتك لتنزّل هذه الأوراق، أو على إحدى مجموعاتك لتضيفها.',
+  askTap: 'اضغط لتسأل: «هل أخرج؟»',
+  tapToMeld: 'اضغط هنا للتنزيل',
+  firstMeldProgress: 'النزول الأول: {have} / {n}',
 };
 
 const DICTS: Record<Lang, Dict> = { en, es, de, ar };

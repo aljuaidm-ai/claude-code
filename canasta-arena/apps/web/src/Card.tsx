@@ -8,10 +8,11 @@ interface CardProps {
   fresh?: boolean;
   staged?: boolean;
   onClick?: () => void;
+  onDoubleClick?: () => void;
   label?: string;
 }
 
-export function CardFace({ card, size = 'hand', selected, fresh, staged, onClick, label }: CardProps) {
+export function CardFace({ card, size = 'hand', selected, fresh, staged, onClick, onDoubleClick, label }: CardProps) {
   const cls = [
     'card', `card-${size}`,
     card.rank === 'JK' ? 'joker' : isRedSuit(card) ? 'red' : 'black',
@@ -24,7 +25,7 @@ export function CardFace({ card, size = 'hand', selected, fresh, staged, onClick
     </>
   );
   if (onClick) {
-    return <button type="button" className={cls} onClick={onClick} aria-pressed={selected} aria-label={label}>{face}</button>;
+    return <button type="button" className={cls} onClick={onClick} onDoubleClick={onDoubleClick} aria-pressed={selected} aria-label={label}>{face}</button>;
   }
   return <span className={cls} aria-label={label}>{face}</span>;
 }
