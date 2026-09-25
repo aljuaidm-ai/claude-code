@@ -1,4 +1,4 @@
-# Canasta Arena — Product & Technical Plan (Draft v0.1)
+# Classic Canasta Arena — Product & Technical Plan (Draft v0.2)
 
 > A fun, competitive home for Canasta players on web and mobile. It brings back the
 > Yahoo! Games lobby-and-table community feel and adds what modern games do well:
@@ -6,6 +6,27 @@
 
 This is a **working draft**. Anything marked **[YOU DECIDE]** is a question for you as
 a Canasta player. Your answers shape the rules engine and the UI.
+
+## 0. Decisions so far (v0.2)
+| Topic | Decision |
+|---|---|
+| Name | **Classic Canasta Arena** |
+| Rules | **Classic** (Hoyle-style) for all ranked play |
+| Singles (1v1) | **Draw 2, discard 1**; 2 canastas to go out |
+| Doubles (2v2) | Game to **5000**, **2 canastas to go out** |
+| Going out in Doubles | Asking "Partner, may I go out?" is **required** |
+| Quick Game | 1v1 only, 2 canastas to go out. Format still open: to 2500, or best of 3 hands |
+| Languages | **English, Spanish, German, Arabic** at launch. Each player sees everything in their own language (see §6.5) |
+| Look | Four options shown in `design/table-looks.html`. Recommendation: a warm table (Club Felt or Salon) plus a modern "Arena" style for the lobby and rankings, with other looks as skins |
+
+### Classic rules baseline (for the engine spec)
+- 2 decks + 4 jokers (108 cards). Jokers and 2s are wild. Doubles: 11 cards each. Singles: 15 cards each, draw 2 and discard 1.
+- Red 3s are laid down at once and a replacement is drawn: 100 each, 800 for all four. They count against a side that has not melded.
+- Black 3s block the next player from taking the pile. They can only be melded when going out, and never with wild cards.
+- Initial meld minimum by current score: below 0 → 15; 0–1495 → 50; 1500–2995 → 90; 3000+ → 120.
+- A meld needs at least 2 natural cards and at most 3 wild cards. A canasta is 7+ cards: natural 500, mixed 300.
+- The pile is frozen for a side that has not melded yet, and for everyone once a wild card is in it. A frozen pile can only be taken with a natural pair matching the top card.
+- Going out: 100 bonus, or 200 when going out concealed. Cards left in hand count against their owner.
 
 ---
 
@@ -170,7 +191,20 @@ do you and your friends actually use?
 - Your hand fans along the bottom. Drag cards up to meld. Double-tap to discard.
 - One-thumb reach: the main action buttons sit bottom-right.
 
-### 6.4 Key screens
+### 6.4 Visual direction options
+See `docs/canasta/design/table-looks.html`: **A Club Felt**, **B Retro '99**, **C Arena Night**, **D Salon**.
+The HTML page switches all four mockups between EN / ES / DE / AR.
+
+### 6.5 Each player in their own language
+- The server sends **event codes and parameters**, never sentences
+  (e.g. `{e:"pile_taken", by:"klaus", n:14}`). Each client writes the text in its own language using ICU MessageFormat, so plurals come out right.
+- **Quick chat** phrases are codes too, so they cross language barriers ("Nice play!" / "¡Buena jugada!" / "Schöner Zug!" / "لعبة حلوة!"). This is key for 2v2 partners who don't share a language.
+- **Free chat** is shown as typed, with an optional "Translate" button that always shows the original.
+- **Arabic** mirrors the screen right to left and uses the Cairo font. Players can choose Western or Arabic-Indic digits. Card corners always show A K Q J.
+- Canasta terms are kept per language (natural: limpia / rein / نظيفة; mixed: sucia / gemischt / مخلوطة). Native-speaking players review all strings before launch.
+- Lobby rooms per language plus an International room. Matchmaking is shared, with an optional "prefer my language" setting.
+
+### 6.6 Key screens
 1. **Home**: Quick Match · Lobby · Play Bots · Clubs · Tournaments · Daily Challenge
 2. **Lobby**: room list → table list (Yahoo-style) with filters (mode, rules, rating range)
 3. **Table / Game**

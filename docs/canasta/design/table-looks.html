@@ -1,0 +1,425 @@
+<title>Canasta Arena Table Looks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Chakra+Petch:wght@500;600;700&family=DM+Serif+Display&family=Marcellus&family=Cairo:wght@400;600;700&display=swap">
+<style>
+:root{
+  --bg:#f3f1ec; --surface:#fbfaf7; --ink:#1f2320; --muted:#5d645f; --line:#d9d5cc;
+  --accent:#2d6a4f; --accent-ink:#ffffff; --chip:#e7e3da;
+  --display:"DM Serif Display", Georgia, "Times New Roman", serif;
+  --body:"Barlow", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#141816; --surface:#1b201d; --ink:#ebeee9; --muted:#a2aaa4; --line:#2f3632;
+    --accent:#7cc5a0; --accent-ink:#0f1a14; --chip:#252b27;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#141816; --surface:#1b201d; --ink:#ebeee9; --muted:#a2aaa4; --line:#2f3632;
+  --accent:#7cc5a0; --accent-ink:#0f1a14; --chip:#252b27;
+}
+*{box-sizing:border-box}
+body{background:var(--bg); color:var(--ink); font-family:var(--body); font-size:16px; line-height:1.55; padding-inline:16px; padding-block:0 64px}
+.wrap{max-width:1040px; margin-inline:auto}
+header.top{padding-block:40px 20px; display:grid; gap:10px}
+.eyebrow{font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); font-weight:600}
+h1{font-family:var(--display); font-weight:400; font-size:clamp(32px,5vw,50px); line-height:1.05; margin:0; text-wrap:balance}
+h2{font-family:var(--display); font-weight:400; font-size:clamp(24px,3.4vw,32px); margin:0; line-height:1.15; text-wrap:balance}
+h3{font-size:15px; margin:0; letter-spacing:.02em}
+p{margin:0; max-width:68ch}
+.lede{color:var(--muted); font-size:18px}
+.decided{display:flex; flex-wrap:wrap; gap:8px; margin-top:6px}
+.chip{background:var(--chip); border:1px solid var(--line); border-radius:999px; padding:4px 12px; font-size:13px; font-weight:500}
+
+/* language bar */
+.langbar{position:sticky; top:env(safe-area-inset-top,0px); z-index:5; background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:blur(8px); border-bottom:1px solid var(--line); padding-block:10px; margin-bottom:28px; display:flex; flex-wrap:wrap; align-items:center; gap:10px 16px}
+.langbar .lbl{font-size:13px; color:var(--muted); font-weight:600}
+.seg{display:inline-flex; border:1px solid var(--line); border-radius:10px; overflow:hidden; background:var(--surface)}
+.seg button{font:600 14px var(--body); color:var(--ink); background:transparent; border:0; padding:8px 14px; cursor:pointer; border-inline-end:1px solid var(--line)}
+.seg button:last-child{border-inline-end:0}
+.seg button[aria-pressed="true"]{background:var(--accent); color:var(--accent-ink)}
+.seg button:focus-visible{outline:2px solid var(--accent); outline-offset:-3px}
+.seg button .ar{font-family:"Cairo", sans-serif}
+
+/* option sections */
+.option{display:grid; gap:14px; padding-block:28px; border-top:1px solid var(--line)}
+.option .head{display:flex; flex-wrap:wrap; align-items:baseline; gap:6px 14px}
+.letter{font:700 13px var(--body); letter-spacing:.1em; color:var(--accent); text-transform:uppercase}
+.notes{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:10px 28px; font-size:15px; color:var(--muted)}
+.notes b{color:var(--ink); font-weight:600}
+.stage{width:100%; position:relative; overflow:hidden; border-radius:14px}
+.stage > .mock{position:absolute; top:0; left:0; transform-origin:top left}
+
+/* ---------- MOCK TABLE (fixed 760 x 470 design, scaled to fit) ---------- */
+.mock{width:760px; height:470px; display:grid; grid-template-rows:38px 1fr; background:var(--m-rim); border-radius:var(--m-radius); overflow:hidden; font-family:var(--m-ui); color:var(--m-ink)}
+.mock[dir="rtl"], .mock[dir="rtl"] *{font-family:"Cairo", var(--m-ui)}
+.bar{display:flex; align-items:center; gap:10px; padding-inline:12px; background:var(--m-bar); color:var(--m-bar-ink); font-size:12.5px; white-space:nowrap}
+.bar .title{font-family:var(--m-display); font-size:15px; letter-spacing:.02em}
+.badge{border:1px solid currentColor; border-radius:var(--m-badge-r); padding:1px 7px; font-size:11px; opacity:.9}
+.bar .grow{flex:1}
+.score{display:flex; gap:12px; font-variant-numeric:tabular-nums; font-weight:600}
+.score .us{color:var(--m-accent)}
+.felt{position:relative; margin:8px; margin-top:0; border-radius:calc(var(--m-radius) - 4px); background:var(--m-felt); display:grid; grid-template-columns:118px 1fr 128px; grid-template-rows:54px 64px 88px 64px 1fr; gap:4px 8px; padding:8px 10px; overflow:hidden}
+.seat{display:flex; flex-direction:column; align-items:center; gap:3px; font-size:12px; text-align:center}
+.avatar{width:34px; height:34px; border-radius:50%; background:var(--m-avatar); display:grid; place-items:center; font-weight:700; font-size:14px; color:var(--m-avatar-ink); box-shadow:0 0 0 2px var(--m-accent-soft)}
+.seat .name{font-weight:600}
+.seat .rating{opacity:.8; font-variant-numeric:tabular-nums; font-size:11px}
+.seat.partner{grid-column:2; grid-row:1; flex-direction:row; justify-content:center; gap:8px}
+.seat.partner .meta{text-align:start}
+.seat.west{grid-column:1; grid-row:2 / 5; justify-content:center}
+.seat.east{grid-column:3; grid-row:1 / 3; justify-content:center}
+.bubble{position:absolute; top:10px; left:calc(50% + 70px); background:var(--m-bubble); color:var(--m-bubble-ink); font-size:12px; padding:4px 10px; border-radius:12px; border-bottom-left-radius:2px; font-weight:600; box-shadow:0 2px 6px rgba(0,0,0,.25)}
+.mock[dir="rtl"] .bubble{left:auto; right:calc(50% + 70px); border-bottom-left-radius:12px; border-bottom-right-radius:2px}
+.minicards{display:flex}
+.minicards i{width:10px; height:15px; border-radius:2px; background:var(--m-back); border:1px solid rgba(255,255,255,.5); margin-inline-start:-5px; display:block}
+.minicards i:first-child{margin-inline-start:0}
+.zone{grid-column:2; display:flex; align-items:center; gap:14px; padding-inline:10px; border-radius:var(--m-zone-r); background:var(--m-zone); border:var(--m-zone-border); position:relative}
+.zone .zl{position:absolute; top:-1px; inset-inline-start:10px; font-size:10px; letter-spacing:.08em; text-transform:uppercase; opacity:.75; transform:translateY(-100%)}
+.mock[dir="rtl"] .zone .zl{letter-spacing:0}
+.zone.theirs{grid-row:2}
+.zone.ours{grid-row:4}
+.center{grid-column:2; grid-row:3; display:flex; align-items:center; justify-content:center; gap:22px}
+.pilebox{display:flex; flex-direction:column; align-items:center; gap:3px; font-size:11px}
+.pile{position:relative; width:46px; height:64px}
+.pile .c{position:absolute; top:0; left:0}
+.pile .sideways{transform:rotate(90deg); top:4px}
+.frozen{font-size:10px; font-weight:700; color:var(--m-frozen); letter-spacing:.04em}
+.side{grid-column:3; grid-row:3 / 5; display:flex; flex-direction:column; gap:6px; font-size:11.5px; justify-content:center}
+.stat{background:var(--m-zone); border:var(--m-zone-border); border-radius:var(--m-zone-r); padding:5px 8px}
+.stat b{display:block; font-size:15px; font-variant-numeric:tabular-nums; color:var(--m-accent)}
+.timer b{color:var(--m-timer)}
+.handrow{grid-column:1 / -1; grid-row:5; display:grid; grid-template-rows:1fr auto; gap:6px; align-items:end}
+.hand{display:flex; justify-content:center; align-items:flex-end; padding-top:6px}
+.hand .c{margin-inline-start:-14px; transition:transform .15s}
+.hand .c:first-child{margin-inline-start:0}
+.hand .c.lift{transform:translateY(-10px); box-shadow:0 0 0 2px var(--m-accent), 0 4px 10px rgba(0,0,0,.3)}
+.actions{display:flex; justify-content:center; gap:8px; align-items:center}
+.btn{font:600 12.5px var(--m-ui); padding:6px 14px; border-radius:var(--m-btn-r); background:var(--m-btn); color:var(--m-btn-ink); border:var(--m-btn-border); box-shadow:var(--m-btn-shadow); white-space:nowrap}
+.btn.ghost{background:transparent; color:var(--m-ink); border:1px solid var(--m-ghost-line); box-shadow:none}
+.btn.dim{opacity:.45}
+.turn{font-size:12px; font-weight:700; color:var(--m-accent); margin-inline-end:6px}
+.log{position:absolute; bottom:8px; inset-inline-start:10px; font-size:11px; opacity:.85; max-width:150px; line-height:1.3}
+
+/* cards */
+.c{direction:ltr; width:40px; height:58px; border-radius:var(--m-card-r); background:#fffdf8; color:#1c1c1c; box-shadow:0 1px 2px rgba(0,0,0,.35); position:relative; font-family:"Barlow", Arial, sans-serif; font-weight:700; flex:none; border:1px solid rgba(0,0,0,.12)}
+.c .r{position:absolute; top:2px; left:4px; font-size:14px; line-height:1}
+.c .s{position:absolute; bottom:3px; right:5px; font-size:17px; line-height:1}
+.c.red{color:#c0262d}
+.c.jk .r{font-size:9px; letter-spacing:.02em}
+.c.jk .s{font-size:18px; color:#8a5a00}
+.c.back{background:var(--m-back); border:2px solid #fff}
+.meld,.hand,.minicards{direction:ltr}
+.meld{display:flex}
+.meld .c{margin-inline-start:-26px}
+.meld .c:first-child{margin-inline-start:0}
+.canasta{position:relative; width:52px; height:60px}
+.canasta .c{position:absolute}
+.canasta .c:nth-child(1){top:0; left:0; transform:rotate(-6deg)}
+.canasta .c:nth-child(2){top:0; left:5px; transform:rotate(-2deg)}
+.canasta .c:nth-child(3){top:1px; left:10px}
+.ctag{position:absolute; bottom:-5px; left:50%; transform:translateX(-50%); font-size:9px; font-weight:700; padding:1px 6px; border-radius:6px; white-space:nowrap; color:#fff; z-index:2; letter-spacing:.02em}
+.ctag.nat{background:#b3202a}
+.ctag.mix{background:#222}
+.red3{display:flex; align-items:center; gap:4px; font-size:10.5px; margin-inline-start:auto}
+.red3 .c{width:28px; height:40px}
+.red3 .c .r{font-size:11px} .red3 .c .s{font-size:12px}
+
+/* banner */
+.flash{position:absolute; right:14px; top:122px; font-family:var(--m-display); font-size:20px; color:var(--m-accent); text-shadow:0 2px 12px rgba(0,0,0,.4); transform:rotate(-4deg); pointer-events:none}
+.mock[dir="rtl"] .flash{right:auto; left:14px; transform:rotate(4deg)}
+
+/* ---------- THEMES ---------- */
+.t-club{
+  --m-radius:16px; --m-rim:linear-gradient(160deg,#6b4527,#3e2513 60%,#5a3a20); --m-bar:transparent; --m-bar-ink:#f3e3bd;
+  --m-felt:radial-gradient(ellipse at 50% 40%, #2f7a53 0%, #1f5a3d 55%, #163f2b 100%);
+  --m-ink:#f4ecd6; --m-accent:#e2c16b; --m-accent-soft:rgba(226,193,107,.6); --m-frozen:#bfe6ff;
+  --m-display:"DM Serif Display", Georgia, serif; --m-ui:"Barlow", Arial, sans-serif;
+  --m-zone:rgba(0,0,0,.16); --m-zone-border:1px solid rgba(226,193,107,.28); --m-zone-r:10px;
+  --m-btn:linear-gradient(#ecd08a,#c9a24a); --m-btn-ink:#2a1f0c; --m-btn-border:1px solid #8a6a26; --m-btn-r:8px; --m-btn-shadow:0 2px 0 #6b511c;
+  --m-ghost-line:rgba(244,236,214,.45); --m-badge-r:6px; --m-card-r:5px;
+  --m-back:repeating-linear-gradient(45deg,#7a1f2b 0 4px,#94303c 4px 8px);
+  --m-avatar:#e9dcc0; --m-avatar-ink:#3e2513; --m-bubble:#f4ecd6; --m-bubble-ink:#2a1f0c; --m-timer:#f4ecd6;
+}
+.t-retro{
+  --m-radius:0px; --m-rim:#c0c0c0; --m-bar:linear-gradient(90deg,#0a246a,#3a6ea5); --m-bar-ink:#fff;
+  --m-felt:#2f6e3b;
+  --m-ink:#ffffff; --m-accent:#ffff66; --m-accent-soft:#ffffff; --m-frozen:#9fdcff;
+  --m-display:Verdana, Tahoma, Geneva, sans-serif; --m-ui:Verdana, Tahoma, Geneva, sans-serif;
+  --m-zone:transparent; --m-zone-border:1px dashed rgba(255,255,255,.45); --m-zone-r:0px;
+  --m-btn:#c0c0c0; --m-btn-ink:#000; --m-btn-border:2px outset #e8e8e8; --m-btn-r:0px; --m-btn-shadow:none;
+  --m-ghost-line:#fff; --m-badge-r:0px; --m-card-r:3px;
+  --m-back:repeating-linear-gradient(0deg,#1d3fa0 0 3px,#2d55c6 3px 6px);
+  --m-avatar:#ffffcc; --m-avatar-ink:#000; --m-bubble:#ffffe1; --m-bubble-ink:#000; --m-timer:#ffffff;
+}
+.t-retro .felt{margin:4px; border:2px inset #d4d4d4; border-radius:0}
+.t-retro .bar .title{font-weight:700; font-size:13px}
+.t-retro .avatar{border-radius:0; box-shadow:1px 1px 0 #000}
+.t-retro .btn.ghost{background:#c0c0c0; color:#000; border:2px outset #e8e8e8}
+.t-retro .bubble{border:1px solid #000; border-radius:0; box-shadow:none}
+.t-retro .flash{font-weight:700; font-size:17px; color:#ffff66; text-shadow:2px 2px 0 #000}
+.t-retro .stat{background:#1f4d28}
+
+.t-arena{
+  --m-radius:18px; --m-rim:#0a0f1a; --m-bar:transparent; --m-bar-ink:#cfe3ff;
+  --m-felt:radial-gradient(ellipse at 50% 0%, #1f3a66 0%, #111c31 55%, #0b1322 100%);
+  --m-ink:#e6eeff; --m-accent:#46d3ff; --m-accent-soft:rgba(70,211,255,.55); --m-frozen:#ffb547;
+  --m-display:"Chakra Petch", "Barlow", sans-serif; --m-ui:"Barlow", Arial, sans-serif;
+  --m-zone:rgba(255,255,255,.04); --m-zone-border:1px solid rgba(120,170,255,.22); --m-zone-r:12px;
+  --m-btn:linear-gradient(135deg,#46d3ff,#3b82f6); --m-btn-ink:#06101f; --m-btn-border:0; --m-btn-r:999px; --m-btn-shadow:0 0 14px rgba(70,211,255,.35);
+  --m-ghost-line:rgba(160,190,255,.4); --m-badge-r:999px; --m-card-r:7px;
+  --m-back:linear-gradient(135deg,#3b82f6,#7c3aed);
+  --m-avatar:linear-gradient(135deg,#ffb547,#ff7a59); --m-avatar-ink:#1a0e05; --m-bubble:#1f2c46; --m-bubble-ink:#e6eeff; --m-timer:#ffb547;
+}
+.t-arena .bar .title{text-transform:uppercase; letter-spacing:.08em; font-weight:700}
+.t-arena .rankpip{display:inline-block; font-size:10px; padding:0 6px; border-radius:6px; background:linear-gradient(135deg,#ffd76a,#e0a100); color:#2a1a00; font-weight:700; margin-inline-start:4px}
+.t-arena .flash{font-weight:700; letter-spacing:.06em; text-shadow:0 0 18px rgba(70,211,255,.8)}
+
+.t-salon{
+  --m-radius:14px; --m-rim:linear-gradient(160deg,#c9a55e,#8a6a33 50%,#c9a55e); --m-bar:#3a0f16; --m-bar-ink:#f3dcae;
+  --m-felt:radial-gradient(ellipse at 50% 45%, rgba(255,220,160,.10), transparent 60%), repeating-conic-gradient(from 45deg, #611d28 0 25%, #5a1824 0 50%) 0 0/28px 28px;
+  --m-ink:#f7e7cc; --m-accent:#f0c877; --m-accent-soft:rgba(240,200,119,.6); --m-frozen:#bfe6ff;
+  --m-display:"Marcellus", Georgia, serif; --m-ui:"Barlow", Arial, sans-serif;
+  --m-zone:rgba(20,4,8,.28); --m-zone-border:1px solid rgba(240,200,119,.35); --m-zone-r:6px;
+  --m-btn:#f0c877; --m-btn-ink:#3a0f16; --m-btn-border:1px solid #fff2d0; --m-btn-r:4px; --m-btn-shadow:0 2px 8px rgba(0,0,0,.35);
+  --m-ghost-line:rgba(247,231,204,.5); --m-badge-r:3px; --m-card-r:5px;
+  --m-back:repeating-conic-gradient(#0f5c5c 0 25%, #177272 0 50%) 0 0/8px 8px;
+  --m-avatar:#f0c877; --m-avatar-ink:#3a0f16; --m-bubble:#f7e7cc; --m-bubble-ink:#3a0f16; --m-timer:#f7e7cc;
+}
+.t-salon .felt{margin:6px; margin-top:0}
+.t-salon .bar .title{letter-spacing:.08em}
+
+/* i18n section */
+.i18n{display:grid; gap:18px; padding-block:32px; border-top:1px solid var(--line)}
+.views{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px}
+.view{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:12px 14px; display:grid; gap:6px}
+.view .who{font-size:12px; color:var(--muted); font-weight:600; letter-spacing:.04em; text-transform:uppercase}
+.view .msg{font-size:15px}
+.view[dir="rtl"] .msg, .view[dir="rtl"] .who{font-family:"Cairo", sans-serif; letter-spacing:0}
+.view .qc{display:inline-block; background:var(--chip); border-radius:999px; padding:2px 10px; font-size:13px; font-weight:600; justify-self:start}
+.rules{display:grid; gap:10px; padding-inline-start:20px; margin:0; max-width:78ch}
+.rules li::marker{color:var(--accent)}
+.rules b{font-weight:600}
+.ask{margin-top:8px; padding:16px 18px; border:1px solid var(--line); border-radius:12px; background:var(--surface); display:grid; gap:6px}
+@media (prefers-reduced-motion: reduce){ .hand .c{transition:none} }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow">Classic Canasta Arena · Design direction</div>
+    <h1>Pick a table look</h1>
+    <p class="lede">Four directions for the same Doubles table, at the same moment in the same hand. Switch the language to see each player's own view. The table layout stays the same across all four; only the style changes. Tell me which one you like, or which parts to mix.</p>
+    <div class="decided">
+      <span class="chip">Classic rules</span>
+      <span class="chip">1v1: draw 2</span>
+      <span class="chip">2v2: game to 5000, 2 canastas to go out</span>
+      <span class="chip">"May I go out?" required</span>
+      <span class="chip">EN · ES · DE · AR</span>
+    </div>
+  </header>
+
+  <div class="langbar" role="group" aria-label="Table language">
+    <span class="lbl">Player language</span>
+    <div class="seg" id="langs">
+      <button type="button" data-l="en" aria-pressed="true">English</button>
+      <button type="button" data-l="es" aria-pressed="false">Español</button>
+      <button type="button" data-l="de" aria-pressed="false">Deutsch</button>
+      <button type="button" data-l="ar" aria-pressed="false"><span class="ar">العربية</span></button>
+    </div>
+  </div>
+
+  <section class="option">
+    <div class="head"><span class="letter">Option A</span><h2>Club Felt</h2></div>
+    <p>A traditional card room: green felt, a wooden rail and gold trim. It feels like the table at home or at the club.</p>
+    <div class="stage" data-theme-class="t-club"></div>
+    <div class="notes">
+      <p><b>Suits:</b> players who learned at a real table and want it to feel familiar. It's the safest choice for broad appeal.</p>
+      <p><b>Risk:</b> many card apps look like this, so the brand has to stand out through other details.</p>
+    </div>
+  </section>
+
+  <section class="option">
+    <div class="head"><span class="letter">Option B</span><h2>Retro '99</h2></div>
+    <p>A nod to Yahoo! Games: gray beveled buttons, a blue title bar and Verdana. It's pure nostalgia for players who were there.</p>
+    <div class="stage" data-theme-class="t-retro"></div>
+    <div class="notes">
+      <p><b>Suits:</b> players who remember Yahoo! Games. It works best as an optional unlockable skin.</p>
+      <p><b>Risk:</b> it looks dated to new or younger players if it's the default.</p>
+    </div>
+  </section>
+
+  <section class="option">
+    <div class="head"><span class="letter">Option C</span><h2>Arena Night</h2></div>
+    <p>A modern competitive look: a deep navy table with glowing highlights, rank badges and pill buttons. It feels like a ranked match.</p>
+    <div class="stage" data-theme-class="t-arena"></div>
+    <div class="notes">
+      <p><b>Suits:</b> ladders, seasons and tournaments. It fits the "arena" name and appeals to younger players.</p>
+      <p><b>Risk:</b> it's less warm, and some traditional players may find it cold.</p>
+    </div>
+  </section>
+
+  <section class="option">
+    <div class="head"><span class="letter">Option D</span><h2>Salon</h2></div>
+    <p>An elegant parlor: burgundy patterned cloth, a brass rail and teal card backs. It's warm and a little luxurious, and it suits Spanish, German and Arabic players alike.</p>
+    <div class="stage" data-theme-class="t-salon"></div>
+    <div class="notes">
+      <p><b>Suits:</b> a premium, social feel. It sets the brand apart from the green-felt apps.</p>
+      <p><b>Risk:</b> the pattern must stay subtle so cards stay easy to read on small phones.</p>
+    </div>
+  </section>
+
+  <section class="option">
+    <div class="head"><span class="letter">My recommendation</span><h2>Mix A or D with C</h2></div>
+    <p>Make the <b>table</b> warm and traditional (Club Felt or Salon), because that's where players spend hours. Use the modern <b>Arena</b> style for the lobby, rankings, seasons and tournaments, where it should feel competitive. Offer <b>Retro '99</b> and the other table looks as free or earned skins, so each player can pick their own. That choice affects only their own screen, just like language.</p>
+  </section>
+
+  <section class="i18n">
+    <div class="head"><span class="letter">Your language idea</span></div>
+    <h2>Every player sees the game in their own language. I agree, and it's the right call.</h2>
+    <p>At one table, Layla plays in Arabic, Marisol in Spanish, Klaus in German and you in English. The server never sends text. It sends events such as "Klaus took the pile, 14 cards", and each device writes them out in that player's language. Here is the same moment on four screens:</p>
+    <div class="views" id="views"></div>
+    <ol class="rules">
+      <li><b>All rule and game text is translated:</b> menus, rules, hints, the scorepad, the move log and tutorials. The server sends codes, never sentences.</li>
+      <li><b>Quick chat is how players talk across languages.</b> Phrases like "Nice play!", "May I go out?" and "Good game" are sent as codes, so each player reads them in their own language. This matters most for 2v2 partners who don't share a language.</li>
+      <li><b>Free-text chat</b> appears as typed, with a "Translate" button (automatic translation, with the original always shown). Lobby rooms per language (English, Español, Deutsch, العربية) plus one International room.</li>
+      <li><b>Arabic mirrors the screen right to left</b> and uses the Cairo font. Players can choose Western (123) or Arabic-Indic (١٢٣) digits. Card corners always show A K Q J so every player sees the same cards.</li>
+      <li><b>Canasta vocabulary is kept per language.</b> A natural canasta is "limpia" (Spanish), "rein" (German) and "نظيفة" (Arabic). Native Canasta players in each language will review the translations before launch.</li>
+      <li><b>Matchmaking isn't split by language</b>, so the player pool stays large. Players can set "prefer my language" for Quick Match.</li>
+    </ol>
+    <div class="ask">
+      <h3>One question for you on 1v1 Quick Game</h3>
+      <p>Which is better for a short 1v1 match with 2 canastas to go out: <b>play to 2500</b>, or <b>best of 3 hands</b> (highest total wins)? Playing to 2500 keeps the normal minimum-meld steps. Best of 3 always ends in about 15 to 20 minutes.</p>
+    </div>
+  </section>
+</div>
+
+<script>
+const T = {
+  en:{room:"Advanced", table:"Table 12", classic:"Classic", two:"2 Canastas to go out", to:"To 5000", us:"Us", them:"Them",
+      cards:"cards", stock:"Stock", pile:"Discard pile", frozen:"FROZEN", theirs:"Their melds", ours:"Our melds",
+      canastas:"Canastas", need:"1 more to go out", timer:"Time", meld:"Meld", add:"Add to meld", take:"Take pile", discard:"Discard",
+      ask:"May I go out?", turn:"Your turn", nice:"Nice play!", flash:"CANASTA!", nat:"NATURAL", mix:"MIXED", you:"You",
+      log:"Marisol discarded 5♦", ev:"Klaus took the pile (14 cards)"},
+  es:{room:"Avanzada", table:"Mesa 12", classic:"Clásica", two:"2 canastas para cerrar", to:"A 5000", us:"Nosotros", them:"Ellos",
+      cards:"cartas", stock:"Mazo", pile:"Pozo", frozen:"CONGELADO", theirs:"Sus juegos", ours:"Nuestros juegos",
+      canastas:"Canastas", need:"Falta 1 para cerrar", timer:"Tiempo", meld:"Bajar", add:"Añadir", take:"Tomar pozo", discard:"Descartar",
+      ask:"¿Puedo cerrar?", turn:"Tu turno", nice:"¡Buena jugada!", flash:"¡CANASTA!", nat:"LIMPIA", mix:"SUCIA", you:"Tú",
+      log:"Marisol descartó 5♦", ev:"Klaus tomó el pozo (14 cartas)"},
+  de:{room:"Fortgeschritten", table:"Tisch 12", classic:"Klassisch", two:"2 Canastas zum Ausmachen", to:"Bis 5000", us:"Wir", them:"Sie",
+      cards:"Karten", stock:"Talon", pile:"Ablage", frozen:"GESPERRT", theirs:"Ihre Meldungen", ours:"Unsere Meldungen",
+      canastas:"Canastas", need:"Noch 1 zum Ausmachen", timer:"Zeit", meld:"Auslegen", add:"Anlegen", take:"Ablage nehmen", discard:"Abwerfen",
+      ask:"Darf ich ausmachen?", turn:"Du bist dran", nice:"Schöner Zug!", flash:"CANASTA!", nat:"REIN", mix:"GEMISCHT", you:"Du",
+      log:"Marisol hat 5♦ abgeworfen", ev:"Klaus hat die Ablage genommen (14 Karten)"},
+  ar:{room:"متقدم", table:"طاولة 12", classic:"كلاسيكي", two:"كاناستتان للخروج", to:"حتى 5000", us:"نحن", them:"هم",
+      cards:"ورقة", stock:"الرزمة", pile:"الأرض", frozen:"مجمّدة", theirs:"مجموعاتهم", ours:"مجموعاتنا",
+      canastas:"كاناستا", need:"باقي واحدة للخروج", timer:"الوقت", meld:"نزّل", add:"أضف", take:"خذ الأرض", discard:"ارمِ",
+      ask:"هل أخرج؟", turn:"دورك", nice:"لعبة حلوة!", flash:"كاناستا!", nat:"نظيفة", mix:"مخلوطة", you:"أنت",
+      log:"Marisol رمت 5♦", ev:"Klaus أخذ الأرض (14 ورقة)"}
+};
+const WHO = {en:"You · English", es:"Marisol · Español", de:"Klaus · Deutsch", ar:"Layla · العربية"};
+
+const RED = new Set(["♥","♦"]);
+function card(rank, suit, extra=""){
+  if(rank==="JK") return `<div class="c jk ${extra}"><span class="r">JKR</span><span class="s">★</span></div>`;
+  return `<div class="c ${RED.has(suit)?"red":""} ${extra}"><span class="r">${rank}</span><span class="s">${suit}</span></div>`;
+}
+const meld = arr => `<div class="meld">${arr.map(([r,s])=>card(r,s)).join("")}</div>`;
+const canasta = (top, tag, cls) => `<div class="canasta">${card(top[0],top[1])}${card(top[0],top[1])}${card(top[0],top[1])}<span class="ctag ${cls}" data-i="${tag}"></span></div>`;
+const mini = n => `<div class="minicards">${"<i></i>".repeat(n)}</div>`;
+
+function mockHTML(theme){
+  const rank = theme==="t-arena";
+  const pip = t => rank ? `<span class="rankpip">${t}</span>` : "";
+  return `
+  <div class="mock ${theme}">
+    <div class="bar">
+      <span class="title">Classic Canasta Arena</span>
+      <span><span data-i="room"></span> · <span data-i="table"></span></span>
+      <span class="badge" data-i="classic"></span><span class="badge" data-i="two"></span><span class="badge" data-i="to"></span>
+      <span class="grow"></span>
+      <span class="score"><span class="us"><span data-i="us"></span> 2380</span><span><span data-i="them"></span> 2140</span></span>
+    </div>
+    <div class="felt">
+      <div class="seat partner"><div class="avatar">L</div><div class="meta"><div class="name">Layla ${pip("GOLD")}</div><div class="rating">1620 · 9 <span data-i="cards"></span></div></div>${mini(9)}</div>
+      <div class="bubble" data-i="nice"></div>
+      <div class="seat west"><div class="avatar">K</div><div class="name">Klaus ${pip("PLAT")}</div><div class="rating">1580</div><div class="rating">25 <span data-i="cards"></span></div>${mini(8)}</div>
+      <div class="seat east"><div class="avatar">M</div><div class="name">Marisol</div><div class="rating">1602 · 6 <span data-i="cards"></span></div>${mini(6)}</div>
+
+      <div class="zone theirs"><span class="zl" data-i="theirs"></span>
+        ${meld([["K","♣"],["K","♦"],["K","♠"],["JK"]])}
+        ${meld([["9","♠"],["9","♥"],["9","♣"],["9","♦"],["2","♠"]])}
+        ${canasta(["7","♣"],"mix","mix")}
+      </div>
+      <div class="center">
+        <div class="pilebox"><div class="pile">${card("","","back")}</div><span data-i="stock"></span></div>
+        <div class="pilebox"><div class="pile">${card("2","♦","sideways")}${card("5","♦")}</div><span data-i="pile"></span><span class="frozen">❄ <span data-i="frozen"></span></span></div>
+      </div>
+      <div class="zone ours"><span class="zl" data-i="ours"></span>
+        ${meld([["A","♠"],["A","♥"],["A","♦"],["A","♣"]])}
+        ${meld([["8","♣"],["8","♥"],["8","♠"],["JK"]])}
+        ${canasta(["Q","♥"],"nat","nat")}
+        <div class="red3">${card("3","♥")}<span>+100</span></div>
+      </div>
+      <div class="side">
+        <div class="stat"><span data-i="canastas"></span><b>1 / 2</b><span data-i="need"></span></div>
+        <div class="stat timer"><span data-i="timer"></span><b>0:24</b></div>
+      </div>
+      <div class="flash" data-i="flash"></div>
+      <div class="handrow">
+        <div class="hand">
+          ${[["4","♣"],["4","♦"],["6","♠"],["6","♥"],["10","♥"],["10","♦"],["J","♣"],["J","♠"],["J","♥"],["K","♥"],["A","♦"],["2","♣"],["JK"]]
+            .map(([r,s],i)=>card(r,s,(i>=6&&i<=8)?"lift":"")).join("")}
+        </div>
+        <div class="actions">
+          <span class="turn" data-i="turn"></span>
+          <span class="btn" data-i="meld"></span>
+          <span class="btn ghost" data-i="add"></span>
+          <span class="btn ghost" data-i="take"></span>
+          <span class="btn ghost" data-i="discard"></span>
+          <span class="btn ghost dim" data-i="ask"></span>
+        </div>
+      </div>
+      <div class="log" data-i="log"></div>
+    </div>
+  </div>`;
+}
+
+document.querySelectorAll(".stage").forEach(st => { st.innerHTML = mockHTML(st.dataset.themeClass); });
+
+function fit(){
+  document.querySelectorAll(".stage").forEach(st => {
+    const s = Math.min(1.3, st.clientWidth / 760);
+    const m = st.firstElementChild;
+    m.style.transform = `scale(${s})`;
+    m.style.left = Math.max(0, (st.clientWidth - 760 * s) / 2) + "px";
+    st.style.height = (470 * s) + "px";
+  });
+}
+new ResizeObserver(fit).observe(document.querySelector(".wrap"));
+fit();
+
+function renderViews(){
+  document.getElementById("views").innerHTML = ["en","es","de","ar"].map(l =>
+    `<div class="view" dir="${l==="ar"?"rtl":"ltr"}" lang="${l}">
+       <span class="who">${WHO[l]}</span>
+       <span class="msg">${T[l].ev}</span>
+       <span class="qc">Layla: ${T[l].nice}</span>
+     </div>`).join("");
+}
+renderViews();
+
+function setLang(l){
+  document.querySelectorAll(".mock").forEach(m => { m.setAttribute("dir", l==="ar"?"rtl":"ltr"); m.setAttribute("lang", l); });
+  document.querySelectorAll(".mock [data-i]").forEach(el => { el.textContent = T[l][el.dataset.i] ?? ""; });
+  document.querySelectorAll("#langs button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.l===l)));
+  try{ localStorage.setItem("cca-lang", l); }catch(e){}
+}
+document.getElementById("langs").addEventListener("click", e => {
+  const b = e.target.closest("button[data-l]"); if(b) setLang(b.dataset.l);
+});
+let start = "en";
+try{ start = localStorage.getItem("cca-lang") || "en"; }catch(e){}
+setLang(T[start] ? start : "en");
+</script>
