@@ -1,4 +1,4 @@
-# Classic Canasta Arena — Product & Technical Plan (Draft v0.2)
+# Classic Canasta Arena — Product & Technical Plan (Draft v0.3)
 
 > A fun, competitive home for Canasta players on web and mobile. It brings back the
 > Yahoo! Games lobby-and-table community feel and adds what modern games do well:
@@ -7,7 +7,7 @@
 This is a **working draft**. Anything marked **[YOU DECIDE]** is a question for you as
 a Canasta player. Your answers shape the rules engine and the UI.
 
-## 0. Decisions so far (v0.2)
+## 0. Decisions so far (v0.3)
 | Topic | Decision |
 |---|---|
 | Name | **Classic Canasta Arena** |
@@ -15,9 +15,9 @@ a Canasta player. Your answers shape the rules engine and the UI.
 | Singles (1v1) | **Draw 2, discard 1**; 2 canastas to go out |
 | Doubles (2v2) | Game to **5000**, **2 canastas to go out** |
 | Going out in Doubles | Asking "Partner, may I go out?" is **required** |
-| Quick Game | 1v1 only, 2 canastas to go out. Format still open: to 2500, or best of 3 hands |
+| Quick Game | 1v1 only, **to 2500**, 2 canastas to go out, normal meld minimums |
 | Languages | **English, Spanish, German, Arabic** at launch. Each player sees everything in their own language (see §6.5) |
-| Look | Four options shown in `design/table-looks.html`. Recommendation: a warm table (Club Felt or Salon) plus a modern "Arena" style for the lobby and rankings, with other looks as skins |
+| Look | **Salon** is the default table, with **Club Felt** as a second table skin from day one. The lobby, rankings, seasons and tournaments use the **Arena Night** style. **Retro '99** comes later as an unlockable skin. Each skin changes only the player's own screen |
 
 ### Classic rules baseline (for the engine spec)
 - 2 decks + 4 jokers (108 cards). Jokers and 2s are wild. Doubles: 11 cards each. Singles: 15 cards each, draw 2 and discard 1.
@@ -27,6 +27,8 @@ a Canasta player. Your answers shape the rules engine and the UI.
 - A meld needs at least 2 natural cards and at most 3 wild cards. A canasta is 7+ cards: natural 500, mixed 300.
 - The pile is frozen for a side that has not melded yet, and for everyone once a wild card is in it. A frozen pile can only be taken with a natural pair matching the top card.
 - Going out: 100 bonus, or 200 when going out concealed. Cards left in hand count against their owner.
+
+The full, testable rulebook is in [`RULES.md`](RULES.md).
 
 ---
 

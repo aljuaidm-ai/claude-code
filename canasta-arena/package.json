@@ -1,0 +1,12 @@
+{
+  "name": "classic-canasta-arena",
+  "private": true,
+  "type": "module",
+  "workspaces": ["packages/*", "apps/*"],
+  "scripts": {
+    "test": "npm run test -w @cca/engine",
+    "typecheck": "npm run typecheck -w @cca/engine && npm run typecheck -w @cca/web",
+    "dev": "npm run dev -w @cca/web",
+    "build": "npm run build -w @cca/web"
+  }
+}
